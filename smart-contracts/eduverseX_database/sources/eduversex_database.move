@@ -40,7 +40,7 @@ module eduversex_database::eduversex_database {
         transfer::transfer(users, sender);
     }
 
-    public entry fun add_user(database : &mut EduverseX_users, user_address : address, name : String) {
+    public fun add_user(database : &mut EduverseX_users, user_address : address, name : String) {
         let user : User = User {
             name : name,
             user_address : user_address,
@@ -52,7 +52,7 @@ module eduversex_database::eduversex_database {
         vector::push_back(&mut database.users, user);
     }
     
-    public entry fun remove_user(database: &mut EduverseX_users, user_address: address) {
+    public fun remove_user(database: &mut EduverseX_users, user_address: address) {
         let num_users: u64 = vector::length(&database.users);
         let mut i = 0;
         while(i < num_users) {
@@ -78,7 +78,7 @@ module eduversex_database::eduversex_database {
         return (b"".to_string(), 0)
     }
 
-    public entry fun update_xp(database : &mut EduverseX_users, user_address : address, xp : u64) {
+    public fun update_xp(database : &mut EduverseX_users, user_address : address, xp : u64) {
         let num_users : u64 = vector::length(&database.users);
         let mut i = 0;
         while(i < num_users) {
@@ -91,7 +91,7 @@ module eduversex_database::eduversex_database {
         };
     }
 
-    public entry fun add_course(database : &mut EduverseX_users, name : String, description : String, contract_address : address) {
+    public fun add_course(database : &mut EduverseX_users, name : String, description : String, contract_address : address) {
         let course : Course = Course {
             name : name,
             description : description,
@@ -100,7 +100,7 @@ module eduversex_database::eduversex_database {
         vector::push_back(&mut database.courses, course);
     }
 
-    public entry fun add_game(database : &mut EduverseX_users, name : String, description : String, contract_address : address) {
+    public fun add_game(database : &mut EduverseX_users, name : String, description : String, contract_address : address) {
         let game : Game = Game {
             name : name,
             description : description,
@@ -109,7 +109,7 @@ module eduversex_database::eduversex_database {
         vector::push_back(&mut database.games, game);
     }
 
-    public entry fun remove_course(database: &mut EduverseX_users, contract_address: address) {
+    public fun remove_course(database: &mut EduverseX_users, contract_address: address) {
         let num_courses: u64 = vector::length(&database.courses);
         let mut i = 0;
         while(i < num_courses) {
@@ -122,7 +122,7 @@ module eduversex_database::eduversex_database {
         };
     }
 
-    public entry fun remove_game(database: &mut EduverseX_users, contract_address: address) {
+    public fun remove_game(database: &mut EduverseX_users, contract_address: address) {
         let num_games: u64 = vector::length(&database.games);
         let mut i = 0;
         while(i < num_games) {
@@ -135,7 +135,7 @@ module eduversex_database::eduversex_database {
         };
     }
 
-    public entry fun update_course(database: &mut EduverseX_users, contract_address: address, new_name: String, new_description: String) {
+    public fun update_course(database: &mut EduverseX_users, contract_address: address, new_name: String, new_description: String) {
         let num_courses: u64 = vector::length(&database.courses);
         let mut i = 0;
         while(i < num_courses) {
@@ -185,7 +185,7 @@ module eduversex_database::eduversex_database {
         // Logic for earning tokens through learning or gaming
     }
 
-    public entry fun enroll_in_course(database: &mut EduverseX_users, user_address: address, course_address: address) {
+    public fun enroll_in_course(database: &mut EduverseX_users, user_address: address, course_address: address) {
         let num_users: u64 = vector::length(&database.users);
         let mut i = 0;
         while(i < num_users) {
@@ -198,7 +198,7 @@ module eduversex_database::eduversex_database {
         };
     }
 
-    public entry fun complete_course(database: &mut EduverseX_users, user_address: address, contract_address: address) {
+    public fun complete_course(database: &mut EduverseX_users, user_address: address, contract_address: address) {
         let num_users : u64 = vector::length(&database.users);
         let mut i = 0;
         while(i < num_users) {
@@ -214,7 +214,7 @@ module eduversex_database::eduversex_database {
         };
     }
 
-    public entry fun award_badge(database: &mut EduverseX_users, user_address: address, badge: String) {
+    public fun award_badge(database: &mut EduverseX_users, user_address: address, badge: String) {
         let num_users : u64 = vector::length(&database.users);
         let mut i = 0;
         while(i < num_users) {
