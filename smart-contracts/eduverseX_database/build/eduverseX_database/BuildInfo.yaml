@@ -5,7 +5,7 @@ compiled_package_info:
     eduversex_database: "0000000000000000000000000000000000000000000000000000000000000000"
     std: "0000000000000000000000000000000000000000000000000000000000000001"
     sui: "0000000000000000000000000000000000000000000000000000000000000002"
-  source_digest: 8FA55C48A906ECD42C3F19C453C84161CA12D2B3BFF0695A7B187EEDBCFA7FA3
+  source_digest: 57E330BED0B5C1579ED576952B77888E31FC10093B0AE08F181590D654F3307E
   build_flags:
     dev_mode: false
     test_mode: false
@@ -14,7 +14,7 @@ compiled_package_info:
     force_recompilation: false
     lock_file: ".\\Move.lock"
     fetch_deps_only: false
-    skip_fetch_latest_git_deps: false
+    skip_fetch_latest_git_deps: true
     default_flavor: sui
     default_edition: ~
     deps_as_root: false
