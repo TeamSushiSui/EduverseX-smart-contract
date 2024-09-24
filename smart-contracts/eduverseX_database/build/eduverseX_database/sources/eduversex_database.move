@@ -45,8 +45,23 @@ module eduversex_database::eduversex_database {
         transfer::transfer(users, sender);             // Transfer ownership of the database to the sender
     }
 
+    fun check_user(database: &EduverseX_users, user_address: address): bool {
+        let num_users: u64 = vector::length(&database.users);
+        let mut i = 0;
+        while(i < num_users) {
+            let user = vector::borrow(&database.users, i);
+            if (user.user_address == user_address) {
+                return true
+            };
+            i = i + 1;
+        };
+        return false
+    }
+
     /// Function to add a user to the database
     public fun add_user(database: &mut EduverseX_users, user_address: address, name: String) {
+        let user_exists  = check_user(database, user_address);
+        assert!(!user_exists, 0);
         let user: User = User {
             name: name,
             user_address: user_address,
@@ -100,8 +115,23 @@ module eduversex_database::eduversex_database {
         };
     }
 
+    fun check_course(database: &EduverseX_users, contract_address: address): bool {
+        let num_courses: u64 = vector::length(&database.courses);
+        let mut i = 0;
+        while(i < num_courses) {
+            let course = vector::borrow(&database.courses, i);
+            if (course.contract_address == contract_address) {
+                return true
+            };
+            i = i + 1;
+        };
+        return false
+    }
+
     /// Function to add a course to the database
     public fun add_course(database: &mut EduverseX_users, name: String, description: String, contract_address: address) {
+        let course_exists  = check_course(database, contract_address);
+        assert!(!course_exists, 0);
         let course: Course = Course {
             name: name,
             description: description,
@@ -110,8 +140,23 @@ module eduversex_database::eduversex_database {
         vector::push_back(&mut database.courses, course);     // Add course to the database
     }
 
+    fun check_game(database: &EduverseX_users, contract_address: address): bool {
+        let num_games: u64 = vector::length(&database.games);
+        let mut i = 0;
+        while(i < num_games) {
+            let game = vector::borrow(&database.games, i);
+            if (game.contract_address == contract_address) {
+                return true
+            };
+            i = i + 1;
+        };
+        return false
+    }
+
     /// Function to add a game to the database
     public fun add_game(database: &mut EduverseX_users, name: String, description: String, contract_address: address) {
+        let game_exists  = check_game(database, contract_address);
+        assert!(!game_exists, 0);
         let game: Game = Game {
             name: name,
             description: description,
