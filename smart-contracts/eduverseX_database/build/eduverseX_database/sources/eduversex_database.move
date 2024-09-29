@@ -31,6 +31,7 @@ module eduversex_database::eduversex_database {
         users: vector<User>,         // List of users
         courses: vector<Course>,     // List of courses
         games: vector<Game>,         // List of games
+        nfts : vector<address>,      // List of NFTs
     }
 
     /// Function to initialize the EduverseX database
@@ -40,6 +41,7 @@ module eduversex_database::eduversex_database {
             users: vector::empty<User>(),             // Initialize empty user vector
             courses: vector::empty<Course>(),         // Initialize empty course vector
             games: vector::empty<Game>(),             // Initialize empty game vector
+            nfts : vector::empty<address>(),          // Initialize empty NFT vector
         };
         let sender: address = tx_context::sender(ctx); // Get the address of the sender
         transfer::transfer(users, sender);             // Transfer ownership of the database to the sender
@@ -85,6 +87,27 @@ module eduversex_database::eduversex_database {
             };
             i = i + 1;
         };
+    }
+
+    public fun add_nft(database: &mut EduverseX_users, nft_address: address) {
+        vector::push_back(&mut database.nfts, nft_address);
+    }
+
+    public fun remove_nft(database: &mut EduverseX_users, nft_address: address) {
+        let num_nfts: u64 = vector::length(&database.nfts); // Get number of users in the database
+        let mut i = 0;
+        while(i < num_nfts) {
+            let nft = vector::borrow(&database.nfts, i);
+            if (nft == nft_address) {          // Check if user's address matches
+                vector::swap_remove(&mut database.nfts, i);  // Remove the user
+                break
+            };
+            i = i + 1;
+        };
+    }
+
+    public fun get_all_nfts(database: &EduverseX_users) : vector<address> {
+        return database.nfts
     }
 
     /// Function to retrieve a user from the database by address
@@ -238,14 +261,14 @@ module eduversex_database::eduversex_database {
 
     /// Placeholder function for rewarding XP or tokens to users for winning games
     #[allow(unused_variable)]
-    public entry fun reward_user_for_game(database: &mut EduverseX_users, user_address: address, reward_xp: u64) {
+    public fun reward_user_for_game(database: &mut EduverseX_users, user_address: address, reward_xp: u64) {
         // Logic for rewarding XP or tokens to users for completing or winning games
     }
 
 
     /// Placeholder function for earning tokens through learning or gaming
     #[allow(unused_variable)]
-    public entry fun earn_tokens(database: &mut EduverseX_users, user_address: address, amount: u64) {
+    public fun earn_tokens(database: &mut EduverseX_users, user_address: address, amount: u64) {
         // Logic for earning tokens through learning or gaming
     }
 

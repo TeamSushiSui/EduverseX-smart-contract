@@ -229,6 +229,26 @@ class EduverseClient {
         return await this.signAndExecuteTransaction(transaction);
     }
 
+    async addNFT(contractAddress: string): Promise<boolean> {
+        const transaction = new Transaction();
+        transaction.moveCall({
+            target: `${PACKAGE_ID}::eduversex_database::add_nft`,
+            arguments: [transaction.object(EDUVERSEX_DB), transaction.pure.address(contractAddress)],
+        });
+
+        return await this.signAndExecuteTransaction(transaction);
+    }
+
+    async removeNFT(contractAddress: string): Promise<boolean> {
+        const transaction = new Transaction();
+        transaction.moveCall({
+            target: `${PACKAGE_ID}::eduversex_database::remove_nft`,
+            arguments: [transaction.object(EDUVERSEX_DB), transaction.pure.address(contractAddress)],
+        });
+
+        return await this.signAndExecuteTransaction(transaction);
+    }
+
     /**
      * Awards a badge to a user in the EduverseX database.
      * 
@@ -302,6 +322,24 @@ class EduverseClient {
                     name: user_name,
                     xp: xp,
                 };
+            } else {
+                return null
+            }
+        } else {
+            return null;
+        }
+    }
+
+    async getAllNfts() {
+        const trx = new Transaction();
+        trx.moveCall({
+            target: `${PACKAGE_ID}::eduversex_database::get_all_nfts`,
+            arguments: [trx.object(EDUVERSEX_DB)],
+        });
+        const returnValues = await this.devInspectTransactionBlock(trx);
+        if (returnValues) {
+            if (returnValues[0] !== undefined) {
+                return null  //To be worked on
             } else {
                 return null
             }

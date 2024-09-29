@@ -75,11 +75,11 @@ class Courses {
         }
     }
 
-    async createCourse(name: string, description: string, creatorAddress: string, xp : number, difficulty : number) {
+    async createCourse(name: string, description: string, creatorAddress: string, xp : number, difficulty : number, image : string) {
         const transaction = new Transaction();
         transaction.moveCall({
             target: `${PACKAGE_ID}::courses::create_course`,
-            arguments: [transaction.pure.string(name), transaction.pure.string(description), transaction.pure.address(creatorAddress), transaction.pure.u64(xp), transaction.pure.u8(difficulty)],
+            arguments: [transaction.pure.string(name), transaction.pure.string(description), transaction.pure.address(creatorAddress), transaction.pure.u64(xp), transaction.pure.u8(difficulty), transaction.pure.string(image)],
         });
          await this.signAndExecuteTransaction(transaction);
     }

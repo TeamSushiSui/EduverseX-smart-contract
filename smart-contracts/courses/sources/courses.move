@@ -14,6 +14,7 @@ module courses::courses {
         revies: vector<Review>,        // List of reviews for the course (note: typo should be 'reviews')
         course_xp: u64,                // Experience points (XP) awarded for completing the course
         difficulty_level: u8,          // Difficulty level of the course (1-5 scale)
+        image_url : String,            // URL of the image associated with the course
     }
 
     /// Structure representing a course review
@@ -30,7 +31,7 @@ module courses::courses {
     }
 
     /// Function to create a new course
-    public fun create_course(name: String, description: String, creator_address: address, xp: u64, difficulty_level: u8, ctx: &mut TxContext) {
+    public fun create_course(name: String, description: String, creator_address: address, xp: u64, difficulty_level: u8, image_url: String, ctx: &mut TxContext) {
         let course: Course = Course {
             id: object::new(ctx),                // Generate a unique ID for the course
             name,                                // Course name
@@ -42,6 +43,7 @@ module courses::courses {
             revies: vector::empty<Review>(),     // Initialize an empty list of reviews (note: typo should be 'reviews')
             course_xp: xp,                       // XP awarded for the course
             difficulty_level,                    // Difficulty level of the course
+            image_url,                           // URL of the image associated with the course
         };
         let sender: address = tx_context::sender(ctx);   // Get the sender's address
         transfer::transfer(course, sender);              // Transfer ownership of the course to the sender
