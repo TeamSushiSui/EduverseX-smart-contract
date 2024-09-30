@@ -18,10 +18,10 @@ module courses::courses {
     }
 
     /// Structure representing a course review
-    public struct Review has store, drop {
+    public struct Review has store, drop, copy {
         student: address,              // Address of the student providing the review
         rating: u8,                    // Rating (1-5 scale)
-        review_text: option::Option<String>,  // Optional review text provided by the student
+        review_text: String,  // review text provided by the student
     }
 
     /// Structure representing a course question
@@ -108,6 +108,10 @@ module courses::courses {
         course.difficulty_level = new_difficulty_level;  // Update the course difficulty level
     }
 
+    public fun update_course_image_url(course: &mut Course, url: String) {
+        course.image_url = url;
+    }
+
     /// Function to enroll a student in the course
     public fun enroll_student(course: &mut Course, student_address: address) {
         vector::push_back(&mut course.students, student_address); // Add the student to the course
@@ -135,18 +139,22 @@ module courses::courses {
     }
 
     /// Function to view course details
-    public fun view_course(course: &Course): (String, String, u64, address, vector<address>) {
-        (course.name, course.description, course.num_of_students, course.created_by, course.students)  // Return course details
+    public fun view_course(course: &Course): (String, String, u8, u64, String, u64, address, vector<address>) {
+        (course.name, course.description, course.difficulty_level, course.course_xp, course.image_url, course.num_of_students, course.created_by, course.students)  // Return course details
     }
 
     /// Function to add a review for the course
-    public fun add_review(course: &mut Course, student_address: address, rating: u8, review_text: option::Option<String>) {
+    public fun add_review(course: &mut Course, student_address: address, rating: u8, review_text: String) {
         let review = Review {
             student: student_address,  // Student providing the review
             rating,                    // Rating given by the student
-            review_text,               // Optional review text
+            review_text,               // review text
         };
         vector::push_back(&mut course.revies, review);  // Add the review to the course (note: typo should be 'reviews')
+    }
+
+    public fun view_reviews(course: &Course): vector<Review> {
+        course.revies  // Return the list of reviews
     }
 }
 

@@ -4,9 +4,9 @@ import "dotenv/config";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { fromB64 } from "@mysten/sui/utils";
 import { SuiClient, getFullnodeUrl } from "@mysten/sui/client";
-import { bcs } from "@mysten/bcs";
+import { bcs, fromHex, toHex } from "@mysten/bcs";
 
-class EduverseClient {
+export class EduverseClient {
     private keypair: Ed25519Keypair;
     private client: SuiClient;
 
@@ -136,7 +136,6 @@ class EduverseClient {
             target: `${PACKAGE_ID}::eduversex_database::add_course`,
             arguments: [transaction.object(EDUVERSEX_DB), transaction.pure.string(courseName), transaction.pure.string(courseDescription), transaction.pure.address(courseAddress)],
         });
-
         return await this.signAndExecuteTransaction(transaction);
     }
 
@@ -330,6 +329,51 @@ class EduverseClient {
         }
     }
 
+    private async getVectorAddress(vec){
+        const Address = bcs.bytes(32).transform({
+            input: (val: string) => fromHex(val),
+            output: (val) => toHex(val),
+        });
+        const addresses = bcs.vector(Address).parse(Uint8Array.from(vec));
+        return addresses.map(str => `0x${str}`);
+    }
+
+    async getAllCoursesAddress() {
+        const trx = new Transaction();
+        trx.moveCall({
+            target: `${PACKAGE_ID}::eduversex_database::get_all_courses_addresses`,
+            arguments: [trx.object(EDUVERSEX_DB)],
+        });
+        const returnValues = await this.devInspectTransactionBlock(trx);
+        if (returnValues) {
+            if (returnValues[0] !== undefined) {
+                return await this.getVectorAddress(returnValues[0][0][0])
+            } else {
+                return null
+            }
+        } else {
+            return null;
+        }
+    }
+
+    async getAllGameAddress() {
+        const trx = new Transaction();
+        trx.moveCall({
+            target: `${PACKAGE_ID}::eduversex_database::get_all_game_addresses`,
+            arguments: [trx.object(EDUVERSEX_DB)],
+        });
+        const returnValues = await this.devInspectTransactionBlock(trx);
+        if (returnValues) {
+            if (returnValues[0] !== undefined) {
+                return await this.getVectorAddress(returnValues[0][0][0])
+            } else {
+                return null
+            }
+        } else {
+            return null;
+        }
+    }
+
     async getAllNfts() {
         const trx = new Transaction();
         trx.moveCall({
@@ -339,7 +383,7 @@ class EduverseClient {
         const returnValues = await this.devInspectTransactionBlock(trx);
         if (returnValues) {
             if (returnValues[0] !== undefined) {
-                return null  //To be worked on
+                return await this.getVectorAddress(returnValues[0][0][0])
             } else {
                 return null
             }
@@ -349,13 +393,15 @@ class EduverseClient {
     }
 }
 
-const Private_key = process.env.PRIVATE_KEY;
+// const Private_key = process.env.PRIVATE_KEY;
 
-if (!Private_key) {
-    throw new Error("Please set your private key in a .env file");
-}
+// if (!Private_key) {
+//     throw new Error("Please set your private key in a .env file");
+// }
 // console.log(Private_key);
 
-const eduverseClient = new EduverseClient(Private_key);
-console.log(await eduverseClient.addUser('Junior', '0x979ba30c4825f1e05bbacfe6fb1c0ea76ce176a2e4603c394fcad691058bfb97'));
+// const eduverseClient = new EduverseClient(Private_key);
+// console.log(await eduverseClient.addUser('Junior', '0x979ba30c4825f1e05bbacfe6fb1c0ea76ce176a2e4603c394fcad691058bfb97'));
+// console.log(await eduverseClient.addCourse('Sui basics 2', "Introduction to the Sui Blockchain 2",'0x46754ee0d3ca295029cf46eb346d823781f87d229a56582ecd05c67a05b14e33'));
+// console.log(await eduverseClient.getAllCoursesAddress());
 // console.log(await eduverseClient.getUserDetails('0x979bc30c4825f1e05bbacfe6fb1c0ea76ce176a2e4603c394fcad691058bfb97'));
