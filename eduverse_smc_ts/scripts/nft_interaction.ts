@@ -7,6 +7,16 @@ import { SuiClient, getFullnodeUrl } from "@mysten/sui/client";
 import { bcs, fromHex, toHex } from "@mysten/bcs";
 import { EduverseClient } from "./smc_interaction";
 
+interface NFTDetails {
+    name: string;
+    description: string;
+    creator: any;
+    owner: any;
+    image: string;
+    price: string;
+    is_for_sale: boolean;
+  }
+
 export class NFT {
     private keypair: Ed25519Keypair;
     private client: SuiClient;
@@ -29,7 +39,7 @@ export class NFT {
         return Math.abs(parseInt(amount, 10)) / 1_000_000_000;
     }
 
-    async signAndExecuteTransaction(transaction: Transaction) {
+    private async signAndExecuteTransaction(transaction: Transaction) {
         try {
             const { objectChanges, balanceChanges } = await this.client.signAndExecuteTransaction({
                 signer: this.keypair,
@@ -70,7 +80,7 @@ export class NFT {
      * @param {Transaction} transaction the transaction to inspect
      * @returns {Promise<(Uint8Array[][] | null)>} an array of return values of the transaction, or null if there was an error
      */
-    async devInspectTransactionBlock(transaction: Transaction): Promise<(any | null)> {
+    private async devInspectTransactionBlock(transaction: Transaction): Promise<(any | null)> {
         try {
             const result = await this.client.devInspectTransactionBlock({
                 transactionBlock: transaction,
@@ -169,16 +179,31 @@ export class NFT {
             return null;
         }
     }
+
+    async getAllNFTsDetails(){
+        const nft_addresses = await this.eduverseClient.getAllNftsAddresses();
+        if(nft_addresses){
+            const nfts: NFTDetails[] = [];
+            for(let i = 0; i < nft_addresses.length; i++){
+                const nft = await this.getNFT(nft_addresses[i]);
+                if(nft){
+                    nfts.push(nft);
+                }
+            }
+            return nfts;
+        }
+    }
 }
 
-const Private_key = process.env.PRIVATE_KEY;
+// const Private_key = process.env.PRIVATE_KEY;
 
-if (!Private_key) {
-    throw new Error("Please set your private key in a .env file");
-}
+// if (!Private_key) {
+//     throw new Error("Please set your private key in a .env file");
+// }
 
-const nft = new NFT(Private_key);
+// const nft = new NFT(Private_key);
 // console.log(await nft.createNFT('SUI ', 'NFT 1 description', 'https://ibb.co/KKttnht'));
 // console.log(await nft.getNFT('0x3d0b1b971c943d70e3225f1bbfe91c876a70b57a49f53233a3aa6e6bb322bee9'))
 // console.log(await nft.listForSale('0x3d0b1b971c943d70e3225f1bbfe91c876a70b57a49f53233a3aa6e6bb322bee9', 5))
 // console.log(await nft.RemoveFromSale('0x3d0b1b971c943d70e3225f1bbfe91c876a70b57a49f53233a3aa6e6bb322bee9'))
+// console.log(await nft.getAllNFTsDetails());

@@ -36,7 +36,7 @@ export class EduverseClient {
      * @param {Transaction} transaction the transaction to sign and execute
      * @returns {Promise<boolean>} true if the transaction was executed successfully, false otherwise
      */
-    async signAndExecuteTransaction(transaction: Transaction): Promise<boolean> {
+    private async signAndExecuteTransaction(transaction: Transaction): Promise<boolean> {
         try {
             const { objectChanges, balanceChanges } = await this.client.signAndExecuteTransaction({
                 signer: this.keypair,
@@ -76,7 +76,7 @@ export class EduverseClient {
      * @param {Transaction} transaction the transaction to inspect
      * @returns {Promise<(Uint8Array[][] | null)>} an array of return values of the transaction, or null if there was an error
      */
-    async devInspectTransactionBlock(transaction: Transaction) : Promise<(any | null)> {
+    private async devInspectTransactionBlock(transaction: Transaction) : Promise<(any | null)> {
         try {
             const result = await this.client.devInspectTransactionBlock({
                 transactionBlock: transaction,
@@ -374,7 +374,7 @@ export class EduverseClient {
         }
     }
 
-    async getAllNfts() {
+    async getAllNftsAddresses() {
         const trx = new Transaction();
         trx.moveCall({
             target: `${PACKAGE_ID}::eduversex_database::get_all_nfts`,

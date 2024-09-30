@@ -7,6 +7,17 @@ import { SuiClient, getFullnodeUrl } from "@mysten/sui/client";
 import { bcs, fromHex, toHex } from "@mysten/bcs";
 import { EduverseClient } from "./smc_interaction";
 
+interface CourseDetails {
+    name: string;
+    description: string;
+    difficulty: number;
+    xp: string;
+    image: string;
+    num_of_students: string;
+    created_by: any;
+    students: string[];
+}
+
 export class Courses {
     private keypair: Ed25519Keypair;
     private client: SuiClient;
@@ -29,7 +40,7 @@ export class Courses {
         return Math.abs(parseInt(amount, 10)) / 1_000_000_000;
     }
 
-    async signAndExecuteTransaction(transaction: Transaction) {
+    private async signAndExecuteTransaction(transaction: Transaction) {
         try {
             const { objectChanges, balanceChanges } = await this.client.signAndExecuteTransaction({
                 signer: this.keypair,
@@ -70,7 +81,7 @@ export class Courses {
      * @param {Transaction} transaction the transaction to inspect
      * @returns {Promise<(Uint8Array[][] | null)>} an array of return values of the transaction, or null if there was an error
      */
-    async devInspectTransactionBlock(transaction: Transaction): Promise<(any | null)> {
+    private async devInspectTransactionBlock(transaction: Transaction): Promise<(any | null)> {
         try {
             const result = await this.client.devInspectTransactionBlock({
                 transactionBlock: transaction,
@@ -349,21 +360,38 @@ export class Courses {
             return null;
         }
     }
+
+    async getAllCoursesDetails() {
+        const course_addresses = await this.eduverseClient.getAllCoursesAddress();
+        if (course_addresses) {
+            let courses: CourseDetails[] = [];
+            for(let i = 0; i < course_addresses.length; i++) {
+                const course_details = await this.getCourseDetails(course_addresses[i]);
+                if (course_details) {
+                    courses.push(course_details);
+                }
+            }
+            return courses;
+        } else {
+            return null;
+        }
+        
+    }
 }
 
 // console.log("Running courses_smc_interaction.ts");
-const Private_key = process.env.PRIVATE_KEY;
+// const Private_key = process.env.PRIVATE_KEY;
 
-if (!Private_key) {
-    throw new Error("Please set your private key in a .env file");
-}
+// if (!Private_key) {
+//     throw new Error("Please set your private key in a .env file");
+// }
 
-const courses = new Courses(Private_key);
-// console.log(await courses.createCourse('Sui basics 2', "Introduction to the Sui Blockchain 2",'0x46754ee0d3ca295029cf46eb346d823781f87d229a56582ecd05c67a05b14e33', 100, 1, "https://ibb.co/vPXZXwP"));
+// const courses = new Courses(Private_key);
+// console.log(await courses.createCourse('Sui basics', "Introduction to the Sui Blockchain",'0x46754ee0d3ca295029cf46eb346d823781f87d229a56582ecd05c67a05b14e33', 100, 1, "https://ibb.co/vPXZXwP"));
 // console.log(await courses.getCourseDetails('0x6df94542b5aa9950f4ecf04c9d892c84e5087d99fcb7773d16754394a6c01477'));
 // console.log(await courses.addQuestion('0xae08841b676645903bd09c63014afc8b8611dbfc2ddd76aba8692c33b03d4cd8', "What is fastest blockchain", "SUI"));
 // console.log(await courses.addQuestion('0xae08841b676645903bd09c63014afc8b8611dbfc2ddd76aba8692c33b03d4cd8', "What is best blockchain", "SUI"));
 // console.log(await courses.viewQuestions('0xae08841b676645903bd09c63014afc8b8611dbfc2ddd76aba8692c33b03d4cd8'));
 // console.log(await courses.addReview('0x6df94542b5aa9950f4ecf04c9d892c84e5087d99fcb7773d16754394a6c01477', "0x48dfdd7c1acb1b4919e1b4248206af584bef882f126f1733521ac41eb13fb77b", 5, "Good"));
-console.log(await courses.viewReviews('0x6df94542b5aa9950f4ecf04c9d892c84e5087d99fcb7773d16754394a6c01477'));
-
+// console.log(await courses.viewReviews('0x6df94542b5aa9950f4ecf04c9d892c84e5087d99fcb7773d16754394a6c01477'));
+// console.log(await courses.getAllCoursesDetails());
