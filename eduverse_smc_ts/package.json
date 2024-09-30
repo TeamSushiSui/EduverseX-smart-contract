@@ -4,7 +4,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "debug": "tsx scripts/smc_interaction.ts"
   },
   "author": "",
   "license": "ISC",
@@ -15,6 +16,8 @@
     "dotenv": "^16.4.5"
   },
   "devDependencies": {
-    "@mysten/sui": "^1.9.0"
+    "@mysten/sui": "^1.9.0",
+    "@types/node": "^22.7.4",
+    "tsx": "^4.19.1"
   }
 }
