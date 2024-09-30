@@ -11,7 +11,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@mysten/bcs": "^1.0.4",
+    "@mysten/bcs": "^1.1.0",
     "@mysten/zklogin": "^0.7.19",
     "dotenv": "^16.4.5"
   },

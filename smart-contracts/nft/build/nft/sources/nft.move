@@ -17,7 +17,7 @@ module nft::nft {
         url: Url,                // URL for the metadata or image of the NFT
         price: u64,              // Price of the NFT in SUI
         is_for_sale: bool,       // Boolean flag indicating if the NFT is listed for sale
-        royalty_percent: u8,     // Royalty percentage for the creator on resale
+        // royalty_percent: u8,     // Royalty percentage for the creator on resale
     }
 
     /// Structure representing the event that occurs when an NFT is minted.
@@ -61,7 +61,7 @@ module nft::nft {
         name: vector<u8>,           // Name of the NFT as a byte vector
         description: vector<u8>,    // Description of the NFT as a byte vector
         url: vector<u8>,            // URL of the NFT as a byte vector
-        royalty_percent: u8,        // Royalty percentage for resale
+        // royalty_percent: u8,        // Royalty percentage for resale
         ctx: &mut TxContext         // Transaction context (used for tracking operations)
     ) {
         let sender = ctx.sender();  // Get the address of the transaction sender
@@ -76,7 +76,7 @@ module nft::nft {
             url: url::new_unsafe_from_bytes(url),          // Create a URL from the byte vector (unsafe method)
             price: 0,                                      // Set the initial price to 0 (not for sale yet)
             is_for_sale: false,                            // Initially, the NFT is not for sale
-            royalty_percent: royalty_percent,              // Set the royalty percentage
+            // royalty_percent: royalty_percent,              // Set the royalty percentage
         };
 
         // Emit an event to notify that the NFT has been minted
@@ -91,13 +91,15 @@ module nft::nft {
     }
 
     /// Function to list the NFT for sale by setting the price and sale status.
-    public fun list_for_sale(nft: &mut EduverseXNFT, price: u64) {
+    public fun list_for_sale(nft: &mut EduverseXNFT, price: u64, ctx : &mut TxContext) {
+        assert!(ctx.sender() == nft.owner, 0);  // Ensure the sender is the owner of the NFT
         nft.price = price;           // Set the price of the NFT
         nft.is_for_sale = true;      // Mark the NFT as available for sale
     }
 
     /// Function to remove the NFT from sale by updating the `is_for_sale` status.
-    public fun remove_from_sale(nft: &mut EduverseXNFT) {
+    public fun remove_from_sale(nft: &mut EduverseXNFT, ctx : &mut TxContext) {
+        assert!(ctx.sender() == nft.owner, 0);  // Ensure the sender is the owner of the NFT
         nft.is_for_sale = false;     // Mark the NFT as no longer for sale
     }
 
@@ -148,7 +150,11 @@ module nft::nft {
         _: &mut TxContext             // Transaction context
     ) {
         // Deconstruct the NFT object and delete the unique ID
-        let EduverseXNFT { id, name: _, description: _,creator: _, owner: _, url: _ , price: _, is_for_sale: _, royalty_percent: _} = nft;
+        let EduverseXNFT { id, name: _, description: _,creator: _, owner: _, url: _ , price: _, is_for_sale: _} = nft;
         id.delete();  // Permanently delete the NFT's unique identifier
-    }   
+    }
+
+    public fun get_nft(nft: &EduverseXNFT) : (String, String, address, address, std::ascii::String, u64, bool) {
+        (nft.name, nft.description, nft.creator, nft.owner, url::inner_url(&nft.url), nft.price, nft.is_for_sale)
+    }  
 }
