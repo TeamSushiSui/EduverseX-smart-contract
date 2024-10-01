@@ -5,6 +5,7 @@ import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { fromB64 } from "@mysten/sui/utils";
 import { SuiClient, getFullnodeUrl } from "@mysten/sui/client";
 import { bcs, fromHex, toHex } from "@mysten/bcs";
+import { Courses } from "./courses_smc_interaction";
 
 export class EduverseClient {
     private keypair: Ed25519Keypair;
@@ -199,16 +200,21 @@ export class EduverseClient {
      * @param {string} userAddress - Address of the user that completed the course.
      * @returns {Promise<boolean>} - Resolves true if the course was completed successfully, false otherwise.
      */
+
     async completeCourse(courseAddress: string, userAddress: string): Promise<boolean> {
         const transaction = new Transaction();
+        const course = new Courses();
+        const course_details = await course.getCourseDetails(courseAddress);
+        if (course_details?.xp !== undefined) {
+            this.updateXp(userAddress, parseInt(course_details.xp));
+        }
         transaction.moveCall({
             target: `${PACKAGE_ID}::eduversex_database::complete_course`,
             arguments: [transaction.object(EDUVERSEX_DB), transaction.pure.address(userAddress), transaction.pure.address(courseAddress)],
         });
-
+    
         return await this.signAndExecuteTransaction(transaction);
     }
-
 
     /**
      * Adds a game to the EduverseX database.

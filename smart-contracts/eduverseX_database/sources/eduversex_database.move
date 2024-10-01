@@ -265,7 +265,6 @@ module eduversex_database::eduversex_database {
         // Logic for rewarding XP or tokens to users for completing or winning games
     }
 
-
     /// Placeholder function for earning tokens through learning or gaming
     #[allow(unused_variable)]
     public fun earn_tokens(database: &mut EduverseX_users, user_address: address, amount: u64) {
