@@ -10,6 +10,7 @@ import { EduverseClient } from "./smc_interaction";
 interface CourseDetails {
     name: string;
     description: string;
+    category : string,
     difficulty: number;
     xp: string;
     image: string;
@@ -24,7 +25,11 @@ export class Courses {
     private eduverseClient: EduverseClient;
     private Address;
 
-    constructor(privateKey: string) {
+    constructor() {
+        const privateKey = process.env.PRIVATE_KEY;
+        if (!privateKey) {
+            throw new Error("PRIVATE_KEY environment variable is not set");
+        }
         const keypair = Ed25519Keypair.fromSecretKey(fromB64(privateKey).slice(1));
         const rpcUrl = getFullnodeUrl("devnet");
         this.keypair = keypair;
@@ -95,11 +100,11 @@ export class Courses {
         }
     }
 
-    async createCourse(name: string, description: string, creatorAddress: string, xp: number, difficulty: number, image: string) {
+    async createCourse(name: string, description: string, category: string, creatorAddress: string, xp: number, difficulty: number, image: string) {
         const transaction = new Transaction();
         transaction.moveCall({
             target: `${COURSES_PACKAGE_ID}::courses::create_course`,
-            arguments: [transaction.pure.string(name), transaction.pure.string(description), transaction.pure.address(creatorAddress), transaction.pure.u64(xp), transaction.pure.u8(difficulty), transaction.pure.string(image)],
+            arguments: [transaction.pure.string(name), transaction.pure.string(description), transaction.pure.string(category), transaction.pure.address(creatorAddress), transaction.pure.u64(xp), transaction.pure.u8(difficulty), transaction.pure.string(image)],
         });
         const object_changes = await this.signAndExecuteTransaction(transaction);
         if (object_changes) {
@@ -293,12 +298,13 @@ export class Courses {
                 return {
                     name: bcs.string().parse(Uint8Array.from(returnValues[0][0][0])),
                     description: bcs.string().parse(Uint8Array.from(returnValues[0][1][0])),
-                    difficulty: bcs.u8().parse(Uint8Array.from(returnValues[0][2][0])),
-                    xp: bcs.u64().parse(Uint8Array.from(returnValues[0][3][0])),
-                    image: bcs.string().parse(Uint8Array.from(returnValues[0][4][0])),
-                    num_of_students: bcs.u64().parse(Uint8Array.from(returnValues[0][5][0])),
-                    created_by: this.Address.parse(Uint8Array.from(returnValues[0][6][0])),
-                    students: await this.getVectorAddress(returnValues[0][7][0]),
+                    category: bcs.string().parse(Uint8Array.from(returnValues[0][2][0])),
+                    difficulty: bcs.u8().parse(Uint8Array.from(returnValues[0][3][0])),
+                    xp: bcs.u64().parse(Uint8Array.from(returnValues[0][4][0])),
+                    image: bcs.string().parse(Uint8Array.from(returnValues[0][5][0])),
+                    num_of_students: bcs.u64().parse(Uint8Array.from(returnValues[0][6][0])),
+                    created_by: this.Address.parse(Uint8Array.from(returnValues[0][7][0])),
+                    students: await this.getVectorAddress(returnValues[0][8][0]),
                 };
             } else {
                 return null;
@@ -380,13 +386,8 @@ export class Courses {
 }
 
 // console.log("Running courses_smc_interaction.ts");
-// const Private_key = process.env.PRIVATE_KEY;
 
-// if (!Private_key) {
-//     throw new Error("Please set your private key in a .env file");
-// }
-
-// const courses = new Courses(Private_key);
+const courses = new Courses();
 // console.log(await courses.createCourse('Sui basics', "Introduction to the Sui Blockchain",'0x46754ee0d3ca295029cf46eb346d823781f87d229a56582ecd05c67a05b14e33', 100, 1, "https://ibb.co/vPXZXwP"));
 // console.log(await courses.getCourseDetails('0x6df94542b5aa9950f4ecf04c9d892c84e5087d99fcb7773d16754394a6c01477'));
 // console.log(await courses.addQuestion('0xae08841b676645903bd09c63014afc8b8611dbfc2ddd76aba8692c33b03d4cd8', "What is fastest blockchain", "SUI"));
@@ -394,4 +395,4 @@ export class Courses {
 // console.log(await courses.viewQuestions('0xae08841b676645903bd09c63014afc8b8611dbfc2ddd76aba8692c33b03d4cd8'));
 // console.log(await courses.addReview('0x6df94542b5aa9950f4ecf04c9d892c84e5087d99fcb7773d16754394a6c01477', "0x48dfdd7c1acb1b4919e1b4248206af584bef882f126f1733521ac41eb13fb77b", 5, "Good"));
 // console.log(await courses.viewReviews('0x6df94542b5aa9950f4ecf04c9d892c84e5087d99fcb7773d16754394a6c01477'));
-// console.log(await courses.getAllCoursesDetails());
+console.log(await courses.getAllCoursesDetails());
