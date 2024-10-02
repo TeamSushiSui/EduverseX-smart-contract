@@ -15,7 +15,7 @@ To set up the API, follow these steps:
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/TeamSushiSui/EduverseX-smart-contract/tree/main/eduverse_smc_ts
+   git clone https://github.com/TeamSushiSui/EduverseX-smart-contract
    cd eduverse_smc_ts
    ```
 
