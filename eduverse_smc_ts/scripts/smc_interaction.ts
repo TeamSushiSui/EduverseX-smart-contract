@@ -166,7 +166,7 @@ export class EduverseClient {
      * @param {string} courseAddress - Address of the course to remove.
      * @returns {Promise<boolean>} - Resolves true if the course was removed successfully, false otherwise.
      */
-    async removeCourse(courseName: string, courseDescription: string, courseAddress: string): Promise<boolean> {
+    async removeCourse(courseAddress: string): Promise<boolean> {
         const transaction = new Transaction();
         transaction.moveCall({
             target: `${PACKAGE_ID}::eduversex_database::remove_course`,

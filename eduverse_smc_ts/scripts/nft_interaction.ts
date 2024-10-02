@@ -106,7 +106,7 @@ export class NFT {
             const objectId = createdObject ? createdObject.objectId : null;
             if (objectId) {
                 await this.eduverseClient.addNFT(objectId);
-                return true;
+                return objectId;
             } else {
                 return false;
             }
@@ -183,6 +183,7 @@ export class NFT {
     async getAllNFTsDetails(){
         const nft_addresses = await this.eduverseClient.getAllNftsAddresses();
         if(nft_addresses){
+            console.log("address", nft_addresses)
             const nfts: NFTDetails[] = [];
             for(let i = 0; i < nft_addresses.length; i++){
                 const nft = await this.getNFT(nft_addresses[i]);

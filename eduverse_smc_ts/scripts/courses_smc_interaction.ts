@@ -112,12 +112,12 @@ export class Courses {
             const objectId = createdObject ? createdObject.objectId : null;
             if (objectId) {
                 await this.eduverseClient.addCourse(name, description, objectId);
-                return true;
+                return objectId;
             } else {
-                return false;
+                return null;
             }
         } else {
-            return false;
+            return null;
         }
 
         // 
@@ -387,7 +387,7 @@ export class Courses {
 
 // console.log("Running courses_smc_interaction.ts");
 
-const courses = new Courses();
+// const courses = new Courses();
 // console.log(await courses.createCourse('Sui basics', "Introduction to the Sui Blockchain",'0x46754ee0d3ca295029cf46eb346d823781f87d229a56582ecd05c67a05b14e33', 100, 1, "https://ibb.co/vPXZXwP"));
 // console.log(await courses.getCourseDetails('0x6df94542b5aa9950f4ecf04c9d892c84e5087d99fcb7773d16754394a6c01477'));
 // console.log(await courses.addQuestion('0xae08841b676645903bd09c63014afc8b8611dbfc2ddd76aba8692c33b03d4cd8', "What is fastest blockchain", "SUI"));
@@ -395,4 +395,4 @@ const courses = new Courses();
 // console.log(await courses.viewQuestions('0xae08841b676645903bd09c63014afc8b8611dbfc2ddd76aba8692c33b03d4cd8'));
 // console.log(await courses.addReview('0x6df94542b5aa9950f4ecf04c9d892c84e5087d99fcb7773d16754394a6c01477', "0x48dfdd7c1acb1b4919e1b4248206af584bef882f126f1733521ac41eb13fb77b", 5, "Good"));
 // console.log(await courses.viewReviews('0x6df94542b5aa9950f4ecf04c9d892c84e5087d99fcb7773d16754394a6c01477'));
-console.log(await courses.getAllCoursesDetails());
+// console.log(await courses.getAllCoursesDetails());
