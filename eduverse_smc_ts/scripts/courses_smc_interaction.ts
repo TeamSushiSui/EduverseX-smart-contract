@@ -165,6 +165,12 @@ export class Courses {
         }
     }
 
+    /**
+     * Removes a question from the given course
+     * @param {string} course - ID of the course to remove the question from
+     * @param {string} question - Text of the question to remove
+     * @returns {Promise<boolean>} - Whether or not the question was successfully removed
+     */
     async removeQuestion(course: string, question: string) {
         const transaction = new Transaction();
         transaction.moveCall({
@@ -369,6 +375,7 @@ export class Courses {
 
     async getAllCoursesDetails() {
         const course_addresses = await this.eduverseClient.getAllCoursesAddress();
+        // console.log(course_addresses);
         if (course_addresses) {
             let courses: CourseDetails[] = [];
             for(let i = 0; i < course_addresses.length; i++) {
@@ -386,13 +393,14 @@ export class Courses {
 }
 
 // console.log("Running courses_smc_interaction.ts");
-
-const courses = new Courses();
-// console.log(await courses.createCourse('Sui basics', "Introduction to the Sui Blockchain",'0x46754ee0d3ca295029cf46eb346d823781f87d229a56582ecd05c67a05b14e33', 100, 1, "https://ibb.co/vPXZXwP"));
+// const c = "0x57d8dfa3abae045749568380c2f9a882e7b36ad6a6c3a07b510a4b70ebe329c2";
+// const courses = new Courses();
+// console.log(await courses.createCourse('Sui basics', "Introduction to the Sui Blockchain", "Blockchain",'0x46754ee0d3ca295029cf46eb346d823781f87d229a56582ecd05c67a05b14e33', 100, 1, "https://metaschool.so/_next/static/media/sui-cover.07109197.svg"));
 // console.log(await courses.getCourseDetails('0x6df94542b5aa9950f4ecf04c9d892c84e5087d99fcb7773d16754394a6c01477'));
-// console.log(await courses.addQuestion('0xae08841b676645903bd09c63014afc8b8611dbfc2ddd76aba8692c33b03d4cd8', "What is fastest blockchain", "SUI"));
+// console.log(await courses.addQuestion(c, "What is fastest blockchain", "SUI"));
 // console.log(await courses.addQuestion('0xae08841b676645903bd09c63014afc8b8611dbfc2ddd76aba8692c33b03d4cd8', "What is best blockchain", "SUI"));
 // console.log(await courses.viewQuestions('0xae08841b676645903bd09c63014afc8b8611dbfc2ddd76aba8692c33b03d4cd8'));
 // console.log(await courses.addReview('0x6df94542b5aa9950f4ecf04c9d892c84e5087d99fcb7773d16754394a6c01477', "0x48dfdd7c1acb1b4919e1b4248206af584bef882f126f1733521ac41eb13fb77b", 5, "Good"));
 // console.log(await courses.viewReviews('0x6df94542b5aa9950f4ecf04c9d892c84e5087d99fcb7773d16754394a6c01477'));
-console.log(await courses.getAllCoursesDetails());
+// console.log(await courses.getAllCoursesDetails());
+// console.log(await courses.updateCourseImageURL(c, "https://metaschool.so/_next/static/media/sui-cover.07109197.svg"));

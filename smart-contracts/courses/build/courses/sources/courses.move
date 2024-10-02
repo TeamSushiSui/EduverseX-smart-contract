@@ -7,6 +7,7 @@ module courses::courses {
         id: UID,                       // Unique identifier for the course
         name: String,                  // Name of the course
         description: String,           // Description of the course
+        category: String,              // Category of the course
         num_of_students: u64,          // Number of students enrolled in the course
         created_by: address,           // Address of the course creator
         students: vector<address>,     // List of student addresses enrolled in the course
@@ -31,11 +32,12 @@ module courses::courses {
     }
 
     /// Function to create a new course
-    public fun create_course(name: String, description: String, creator_address: address, xp: u64, difficulty_level: u8, image_url: String, ctx: &mut TxContext) {
+    public fun create_course(name: String, description: String, category : String, creator_address: address, xp: u64, difficulty_level: u8, image_url: String, ctx: &mut TxContext) {
         let course: Course = Course {
             id: object::new(ctx),                // Generate a unique ID for the course
             name,                                // Course name
             description,                         // Course description
+            category,                            // Category of the course
             num_of_students: 0,                  // Initialize the number of students to 0
             created_by: creator_address,         // Creator's address
             students: vector::empty<address>(),  // Initialize an empty list of students
@@ -139,8 +141,8 @@ module courses::courses {
     }
 
     /// Function to view course details
-    public fun view_course(course: &Course): (String, String, u8, u64, String, u64, address, vector<address>) {
-        (course.name, course.description, course.difficulty_level, course.course_xp, course.image_url, course.num_of_students, course.created_by, course.students)  // Return course details
+    public fun view_course(course: &Course): (String, String, String, u8, u64, String, u64, address, vector<address>) {
+        (course.name, course.description, course.category, course.difficulty_level, course.course_xp, course.image_url, course.num_of_students, course.created_by, course.students)  // Return course details
     }
 
     /// Function to add a review for the course
