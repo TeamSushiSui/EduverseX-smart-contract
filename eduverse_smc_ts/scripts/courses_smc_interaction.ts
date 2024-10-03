@@ -2,7 +2,7 @@ import { Transaction } from "@mysten/sui/transactions";
 import { COURSES_PACKAGE_ID, EDUVERSEX_DB } from "../addresses/smc_address.json";
 import "dotenv/config";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
-import { fromB64 } from "@mysten/sui/utils";
+import { fromBase64 } from "@mysten/sui/utils";
 import { SuiClient, getFullnodeUrl } from "@mysten/sui/client";
 import { bcs, fromHex, toHex } from "@mysten/bcs";
 import { EduverseClient } from "./smc_interaction";
@@ -30,7 +30,7 @@ export class Courses {
         if (!privateKey) {
             throw new Error("PRIVATE_KEY environment variable is not set");
         }
-        const keypair = Ed25519Keypair.fromSecretKey(fromB64(privateKey).slice(1));
+        const keypair = Ed25519Keypair.fromSecretKey(fromBase64(privateKey).slice(1));
         const rpcUrl = getFullnodeUrl("devnet");
         this.keypair = keypair;
         this.client = new SuiClient({ url: rpcUrl });
@@ -49,7 +49,7 @@ export class Courses {
         try {
             const { objectChanges, balanceChanges } = await this.client.signAndExecuteTransaction({
                 signer: this.keypair,
-                transaction: transaction,
+                transaction: transaction as unknown as Uint8Array,
                 options: {
                     showBalanceChanges: true,
                     showEvents: true,
@@ -89,7 +89,7 @@ export class Courses {
     private async devInspectTransactionBlock(transaction: Transaction): Promise<(any | null)> {
         try {
             const result = await this.client.devInspectTransactionBlock({
-                transactionBlock: transaction,
+                transactionBlock: transaction as unknown as string, // Cast to string if necessary
                 sender: this.keypair.getPublicKey().toSuiAddress(),
             });
             const returnValues = result.results ? result.results.map(result => result.returnValues) : [];

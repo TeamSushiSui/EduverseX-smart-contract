@@ -15,6 +15,7 @@ if (!private_key) {
 
 const user = new EduverseClient(private_key)
 
+
 // Gets detalls of a users
 userRouter.get('/:id', (req, res) => {
     const response = user.getUserDetails(req.param.id)
@@ -42,13 +43,13 @@ userRouter.post('/', async (req, res) => {
 const removeUserSchema = Joi.object({
     userAdress: Joi.string().required()
 })
-userRouter.post('/', async (req, res) => {
+userRouter.delete('/', async (req, res) => {
     const {error, value} = removeUserSchema.validate(req.body)
     if ( error ) return res.status(400).send(error.details[0].message)
   
     const { userAdress} = value
     const result = await user.removeUser(userAdress)
-    if (!result) return res.status(404).send(`user address ${userAdress} not found`)
+    if (!result) return res.status(404).send(`Error: User address ${userAdress} not found`)
 
-    res.send(`user of address ${userAdress} removed`)
+    res.send(`User of address ${userAdress} removed successfully`)
 })

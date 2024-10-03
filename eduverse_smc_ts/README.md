@@ -52,7 +52,6 @@ You can use tools like [Postman](https://www.postman.com/) or [cURL](https://cur
 - If you encounter any issues, ensure that all dependencies are installed correctly and that your environment variables are set up properly.
 - Check the console for any error messages that may indicate what went wrong.
 
-
 # Routes
 
 ## NFT Routes
@@ -187,6 +186,87 @@ You can use tools like [Postman](https://www.postman.com/) or [cURL](https://cur
 - **Description:** Deletes a course by its ID.
 - **Response:** Confirmation message.
 - **Error Response:** 404 if the course is not found.
+
+### 6. Add a Question to a Course
+- **Endpoint:** `POST /courses/add-question`
+- **Description:** Adds a question to a specific course.
+- **Request Body:**
+  ```json
+  {
+    "course": "string",
+    "question": "string",
+    "answer": "string"
+  }
+  ```
+- **Response:** Confirmation message.
+- **Error Response:** 400 for validation errors, 500 for server errors.
+
+### 7. Enroll a Student in a Course
+- **Endpoint:** `POST /courses/enroll-student`
+- **Description:** Enrolls a student in a specific course.
+- **Request Body:**
+  ```json
+  {
+    "course": "string",
+    "student": "string"
+  }
+  ```
+- **Response:** Confirmation message.
+- **Error Response:** 400 for validation errors, 500 for server errors.
+
+### 8. Unenroll a Student from a Course
+- **Endpoint:** `POST /courses/unenroll-student`
+- **Description:** Unenrolls a student from a specific course.
+- **Request Body:**
+  ```json
+  {
+    "course": "string",
+    "student": "string"
+  }
+  ```
+- **Response:** Confirmation message.
+- **Error Response:** 400 for validation errors, 500 for server errors.
+
+### 9. Add a Review to a Course
+- **Endpoint:** `POST /courses/add-review`
+- **Description:** Adds a review to a specific course.
+- **Request Body:**
+  ```json
+  {
+    "course": "string",
+    "student": "string",
+    "rating": "number",
+    "review": "string"
+  }
+  ```
+- **Response:** Confirmation message.
+- **Error Response:** 400 for validation errors, 500 for server errors.
+
+### 10. Check Correct Answer for a Question
+- **Endpoint:** `POST /courses/check-correct-answer`
+- **Description:** Checks if the provided answer is correct for a question in a course.
+- **Request Body:**
+  ```json
+  {
+    "course": "string",
+    "question": "string",
+    "answer": "string"
+  }
+  ```
+- **Response:** JSON object indicating if the answer is correct.
+- **Error Response:** 400 for validation errors, 500 for server errors.
+
+### 11. View Questions for a Course
+- **Endpoint:** `GET /courses/:id/questions`
+- **Description:** Retrieves questions for a specific course.
+- **Response:** JSON array of questions.
+- **Error Response:** 404 if questions are not found.
+
+### 12. View Reviews for a Course
+- **Endpoint:** `GET /courses/:id/reviews`
+- **Description:** Retrieves reviews for a specific course.
+- **Response:** JSON array of reviews.
+- **Error Response:** 404 if reviews are not found.
 
 ## Notes
 - Ensure to set the `PRIVATE_KEY` environment variable before starting the server.

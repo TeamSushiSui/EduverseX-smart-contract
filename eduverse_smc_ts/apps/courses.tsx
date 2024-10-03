@@ -24,7 +24,7 @@ courseRouter.get('/', async (req, res) => {
     res.send(response)
 })
 
-// Gets a Courses using its id (object id)
+// Gets a Course using its id (object id)
 courseRouter.get('/:id', async (req, res) => {
   const response = await courses.getCourseDetails(req.params.id)
   if (!response) return res.status(404).send(`Error: Course with id ${req.params.id} is not found`)
@@ -33,7 +33,7 @@ courseRouter.get('/:id', async (req, res) => {
 })
 
 // Creates a new course
-const createCourseShema = Joi.object({
+const createCourseSchema = Joi.object({
   name: Joi.string().required(),
   description: Joi.string().required(),
   category: Joi.string().required(),
@@ -43,7 +43,7 @@ const createCourseShema = Joi.object({
   image: Joi.string().required()
 })
 courseRouter.post('/', async (req, res) => {
-  const { error, value } = createCourseShema.validate(req.body)
+  const { error, value } = createCourseSchema.validate(req.body)
   if (error) return res.status(400).send(error.details[0].message)
 
   const { name, description, category, creatorAddress, xp, difficulty, image } = value
@@ -51,10 +51,200 @@ courseRouter.post('/', async (req, res) => {
   if (!objectId) return res.status(500).send(`Error: could not create course of name ${name}`)
   
   const response = await courses.getCourseDetails(objectId)
-  if (!response) return res.send({id: objectId})
-
-  res.send({id: objectId, ...response})
+  res.send({ id: objectId, ...response })
 })
+
+// Add a question to a course
+const addQuestionSchema = Joi.object({
+  course: Joi.string().required(),
+  question: Joi.string().required(),
+  answer: Joi.string().required(),
+});
+courseRouter.post('/add-question', async (req, res) => {
+  const { error } = addQuestionSchema.validate(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const { course, question, answer } = req.body;
+  const success = await courses.addQuestion(course, question, answer);
+  if (success) return res.send('Question added successfully');
+  
+  return res.status(500).send('Error: Could not add question');
+});
+
+// Enroll a student in a course
+const enrollStudentSchema = Joi.object({
+  course: Joi.string().required(),
+  student: Joi.string().required(),
+});
+courseRouter.post('/enroll-student', async (req, res) => {
+  const { error } = enrollStudentSchema.validate(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const { course, student } = req.body;
+  const success = await courses.enrollStudent(course, student);
+  if (success) return res.send('Student enrolled successfully');
+  
+  return res.status(500).send('Error: Could not enroll student');
+});
+
+// Unenroll a student from a course
+courseRouter.post('/unenroll-student', async (req, res) => {
+  const { error } = enrollStudentSchema.validate(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const { course, student } = req.body;
+  const success = await courses.unEnrollStudent(course, student);
+  if (success) return res.send('Student unenrolled successfully');
+  
+  return res.status(500).send('Error: Could not unenroll student');
+});
+
+// Remove a question from a course
+const removeQuestionSchema = Joi.object({
+  course: Joi.string().required(),
+  question: Joi.string().required(),
+});
+courseRouter.post('/remove-question', async (req, res) => {
+  const { error } = removeQuestionSchema.validate(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const { course, question } = req.body;
+  const success = await courses.removeQuestion(course, question);
+  if (success) return res.send('Question removed successfully');
+  
+  return res.status(500).send('Error: Could not remove question');
+});
+
+// Update course name
+const updateCourseNameSchema = Joi.object({
+  course: Joi.string().required(),
+  name: Joi.string().required(),
+});
+courseRouter.post('/update-course-name', async (req, res) => {
+  const { error } = updateCourseNameSchema.validate(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const { course, name } = req.body;
+  const success = await courses.updateCourseName(course, name);
+  if (success) return res.send('Course name updated successfully');
+  
+  return res.status(500).send('Error: Could not update course name');
+});
+
+// Update course description
+const updateCourseDescriptionSchema = Joi.object({
+  course: Joi.string().required(),
+  description: Joi.string().required(),
+});
+courseRouter.post('/update-course-description', async (req, res) => {
+  const { error } = updateCourseDescriptionSchema.validate(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const { course, description } = req.body;
+  const success = await courses.updateCourseDescription(course, description);
+  if (success) return res.send('Course description updated successfully');
+  
+  return res.status(500).send('Error: Could not update course description');
+});
+
+// Update course image URL
+const updateCourseImageURLSchema = Joi.object({
+  course: Joi.string().required(),
+  image: Joi.string().required(),
+});
+courseRouter.post('/update-course-image', async (req, res) => {
+  const { error } = updateCourseImageURLSchema.validate(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const { course, image } = req.body;
+  const success = await courses.updateCourseImageURL(course, image);
+  if (success) return res.send('Course image updated successfully');
+  
+  return res.status(500).send('Error: Could not update course image');
+});
+
+// Update course difficulty
+const updateCourseDifficultySchema = Joi.object({
+  course: Joi.string().required(),
+  difficulty: Joi.number().required(),
+});
+courseRouter.post('/update-course-difficulty', async (req, res) => {
+  const { error } = updateCourseDifficultySchema.validate(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const { course, difficulty } = req.body;
+  const success = await courses.updateCourseDifficulty(course, difficulty);
+  if (success) return res.send('Course difficulty updated successfully');
+  
+  return res.status(500).send('Error: Could not update course difficulty');
+});
+
+// Update course XP
+const updateCourseXPSchema = Joi.object({
+  course: Joi.string().required(),
+  xp: Joi.number().required(),
+});
+courseRouter.post('/update-course-xp', async (req, res) => {
+  const { error } = updateCourseXPSchema.validate(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const { course, xp } = req.body;
+  const success = await courses.updateCourseXP(course, xp);
+  if (success) return res.send('Course XP updated successfully');
+  
+  return res.status(500).send('Error: Could not update course XP');
+});
+
+// Add a review to a course
+const addReviewSchema = Joi.object({
+  course: Joi.string().required(),
+  student: Joi.string().required(),
+  rating: Joi.number().required(),
+  review: Joi.string().required(),
+});
+courseRouter.post('/add-review', async (req, res) => {
+  const { error } = addReviewSchema.validate(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const { course, student, rating, review } = req.body;
+  const success = await courses.addReview(course, student, rating, review);
+  if (success) return res.send('Review added successfully');
+  
+  return res.status(500).send('Error: Could not add review');
+});
+
+// Check correct answer for a question
+const checkCorrectAnswerSchema = Joi.object({
+  course: Joi.string().required(),
+  question: Joi.string().required(),
+  answer: Joi.string().required(),
+});
+courseRouter.post('/check-correct-answer', async (req, res) => {
+  const { error } = checkCorrectAnswerSchema.validate(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const { course, question, answer } = req.body;
+  const isCorrect = await courses.checkCorrectAnswer(course, question, answer);
+  if (isCorrect !== null) return res.send({ isCorrect });
+  
+  return res.status(500).send('Error: Could not check answer');
+});
+
+// View questions for a course
+courseRouter.get('/:id/questions', async (req, res) => {
+  const questions = await courses.viewQuestions(req.params.id);
+  if (questions) return res.send(questions);
+  
+  return res.status(404).send('Error: Questions not found');
+});
+
+// View reviews for a course
+courseRouter.get('/:id/reviews', async (req, res) => {
+  const reviews = await courses.viewReviews(req.params.id);
+  if (reviews) return res.send(reviews);
+  
+  return res.status(404).send('Error: Reviews not found');
+});
 
 // Updates course using id (object id)
 const updateCourseShema = Joi.object({
@@ -82,4 +272,12 @@ courseRouter.get('/:id', async (req, res) => {
   if (!response) return res.status(404).send(`Error: Course with id ${req.params.id} is not found`)
   
   return res.status(402).sent(`course of id ${req.params.id} has been deleted`)
+})
+
+// Update the delete course method to use DELETE
+courseRouter.delete('/:id', async (req, res) => {
+  const response = await edu.removeCourse(req.params.id)
+  if (!response) return res.status(404).send(`Error: Course with id ${req.params.id} not found`)
+  
+  return res.status(200).send(`Course of id ${req.params.id} has been deleted`)
 })

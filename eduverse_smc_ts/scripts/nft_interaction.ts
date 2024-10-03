@@ -43,7 +43,7 @@ export class NFT {
         try {
             const { objectChanges, balanceChanges } = await this.client.signAndExecuteTransaction({
                 signer: this.keypair,
-                transaction: transaction,
+                transaction: transaction as unknown as Uint8Array,
                 options: {
                     showBalanceChanges: true,
                     showEvents: true,
@@ -83,7 +83,7 @@ export class NFT {
     private async devInspectTransactionBlock(transaction: Transaction): Promise<(any | null)> {
         try {
             const result = await this.client.devInspectTransactionBlock({
-                transactionBlock: transaction,
+                transactionBlock: transaction as unknown as Uint8Array,
                 sender: this.keypair.getPublicKey().toSuiAddress(),
             });
             const returnValues = result.results ? result.results.map(result => result.returnValues) : [];

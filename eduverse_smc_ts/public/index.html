@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1 { color: #333; }
+        h2 { color: #555; }
+        pre { background: #f4f4f4; padding: 10px; border-radius: 5px; }
+        ul { list-style-type: none; padding: 0; }
+    </style>
+</head>
+<body>
+    <h1>API Documentation</h1>
+    <h2>Table of Contents</h2>
+    <ul>
+        <li><a href="#nft-routes">NFT Routes</a></li>
+        <li><a href="#user-routes">User Routes</a></li>
+        <li><a href="#course-routes">Course Routes</a></li>
+    </ul>
+
+    <h2 id="nft-routes">NFT Routes</h2>
+    <h3>1. Get All NFTs</h3>
+    <pre>GET /nfts</pre>
+    <p>Retrieves all NFTs in the contract.</p>
+
+    <h3>2. Get NFT by ID</h3>
+    <pre>GET /nfts/:id</pre>
+    <p>Retrieves details of a specific NFT by its ID.</p>
+
+    <h3>3. Create a New NFT</h3>
+    <pre>POST /nfts</pre>
+    <p>Creates a new NFT.</p>
+    <pre>{
+    "name": "string",
+    "description": "string",
+    "image": "string"
+}</pre>
+
+    <h3>4. List NFT for Sale</h3>
+    <pre>PUT /nfts/list-for-sale</pre>
+    <p>Lists an NFT for sale.</p>
+    <pre>{
+    "id": "string",
+    "price": "number"
+}</pre>
+
+    <h3>5. Remove NFT from Sale</h3>
+    <pre>PUT /nfts/remove-from-sale</pre>
+    <p>Removes an NFT from sale.</p>
+    <pre>{
+    "id": "string"
+}</pre>
+
+    <h2 id="user-routes">User Routes</h2>
+    <h3>1. Get User Details</h3>
+    <pre>GET /users/:id</pre>
+    <p>Retrieves details of a specific user by their ID.</p>
+
+    <h3>2. Add a User</h3>
+    <pre>POST /users</pre>
+    <p>Adds a new user.</p>
+    <pre>{
+    "name": "string",
+    "userAdress": "string"
+}</pre>
+
+    <h3>3. Remove a User</h3>
+    <pre>DELETE /users</pre>
+    <p>Removes a user by their address.</p>
+    <pre>{
+    "userAdress": "string"
+}</pre>
+
+    <h2 id="course-routes">Course Routes</h2>
+    <h3>1. Get All Courses</h3>
+    <pre>GET /courses</pre>
+    <p>Retrieves all courses in the contract.</p>
+
+    <h3>2. Get Course by ID</h3>
+    <pre>GET /courses/:id</pre>
+    <p>Retrieves details of a specific course by its ID.</p>
+
+    <h3>3. Create a New Course</h3>
+    <pre>POST /courses</pre>
+    <p>Creates a new course.</p>
+    <pre>{
+    "name": "string",
+    "description": "string",
+    "category": "string",
+    "creatorAddress": "string",
+    "xp": "number",
+    "difficulty": "number",
+    "image": "string"
+}</pre>
+
+    <h3>4. Update a Course</h3>
+    <pre>PUT /courses</pre>
+    <p>Updates an existing course.</p>
+    <pre>{
+    "name": "string",
+    "description": "string",
+    "id": "string"
+}</pre>
+
+    <h3>5. Remove a Course</h3>
+    <pre>DELETE /courses/:id</pre>
+    <p>Deletes a course by its ID.</p>
+
+    <h3>6. Add a Question to a Course</h3>
+    <pre>POST /courses/add-question</pre>
+    <p>Adds a question to a specific course.</p>
+    <pre>{
+    "course": "string",
+    "question": "string",
+    "answer": "string"
+}</pre>
+
+    <h3>7. Enroll a Student in a Course</h3>
+    <pre>POST /courses/enroll-student</pre>
+    <p>Enrolls a student in a specific course.</p>
+    <pre>{
+    "course": "string",
+    "student": "string"
+}</pre>
+
+    <h3>8. Unenroll a Student from a Course</h3>
+    <pre>POST /courses/unenroll-student</pre>
+    <p>Unenrolls a student from a specific course.</p>
+    <pre>{
+    "course": "string",
+    "student": "string"
+}</pre>
+
+    <h3>9. Add a Review to a Course</h3>
+    <pre>POST /courses/add-review</pre>
+    <p>Adds a review to a specific course.</p>
+    <pre>{
+    "course": "string",
+    "student": "string",
+    "rating": "number",
+    "review": "string"
+}</pre>
+
+    <h3>10. Check Correct Answer for a Question</h3>
+    <pre>POST /courses/check-correct-answer</pre>
+    <p>Checks if the provided answer is correct for a question in a course.</p>
+    <pre>{
+    "course": "string",
+    "question": "string",
+    "answer": "string"
+}</pre>
+
+    <h3>11. View Questions for a Course</h3>
+    <pre>GET /courses/:id/questions</pre>
+    <p>Retrieves questions for a specific course.</p>
+
+    <h3>12. View Reviews for a Course</h3>
+    <pre>GET /courses/:id/reviews</pre>
+    <p>Retrieves reviews for a specific course.</p>
+</body>
+</html>
