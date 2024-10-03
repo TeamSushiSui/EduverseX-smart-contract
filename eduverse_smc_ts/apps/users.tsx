@@ -15,7 +15,6 @@ if (!private_key) {
 
 const user = new EduverseClient(private_key)
 
-
 // Gets detalls of a users
 userRouter.get('/:id', (req, res) => {
     const response = user.getUserDetails(req.param.id)

@@ -17,6 +17,7 @@ export class EduverseClient {
      * @throws {Error} if privateKey is not a valid base64 encoded Ed25519 private key
      */
     constructor(privateKey: string) {
+        
         const keypair = Ed25519Keypair.fromSecretKey(fromB64(privateKey).slice(1));
         const rpcUrl = getFullnodeUrl("devnet");
         this.keypair = keypair;
